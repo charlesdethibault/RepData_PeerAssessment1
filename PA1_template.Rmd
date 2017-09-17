@@ -36,7 +36,7 @@ There are a number of days/intervals where there are missing values (coded as NA
 missing <- sum(!complete.cases(data))
 ```
 
-There are `r missing` items missing in dataset
+There are `r missing` 2304 items missing in dataset
 
 We will replace the missing items by the average step of that day ith below formula
 ```{r}
