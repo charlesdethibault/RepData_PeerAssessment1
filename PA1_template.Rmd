@@ -2,7 +2,7 @@
 title: "Reproducible Research: Peer Assessment 1"
 author: "Charles-Antoine de Thibault"
 date: "September 17, 2017"
-output: github_document
+output: rmarkdown::github_document
 ---
 
 
