@@ -19,6 +19,7 @@ StepsMean <- mean(StepsByDay$steps)
 StepsMedian <- median(StepsByDay$steps)
 ```
 The mean is `r round(StepsMean)` and the median is `r StepsMedian`
+The mean is 1.076610^{4} and the median is 10765
 
 ## What is the average daily activity pattern?
 ```{r}
@@ -27,7 +28,7 @@ plot(StepsperInterval$interval,StepsperInterval$steps, type="l", xlab="Interval"
 MaxInterval <- StepsperInterval[which.max(StepsperInterval$steps),1]
 ```
 The 5 minute interval that contains the average maximum number of steps is the `r MaxInterval`
-
+The 5 minute interval that contains the average maximum number of steps is the 835
 ## Imputing missing values
 
 There are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
@@ -65,7 +66,7 @@ DiffStepsMean =(StepsMeanUpdated-StepsMean)
 DiffStepsMedian =(StepsMedianUpdated-StepsMedian)
 DiffTotal <- sum(StepsByDayUpdated$steps) - sum(StepsByDay$steps)
 ```
-With the update, the mean is now `r round(StepsMeanUpdated)` and the median is `r StepsMedianUpdated`
+With the update, the mean is now `r round(StepsMeanUpdated)` 1.076610^{4} and the median is `r StepsMedianUpdated`1.076618910^{4} 
 As we can see, the mean has not changed but the median has increased and got closer to the mean which makes the data more "normally distributed".
 By filling the NA we have added `r DiffTotal` steps to the data.
 
