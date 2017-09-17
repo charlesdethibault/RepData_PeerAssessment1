@@ -1,8 +1,8 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+author: "Charles-Antoine de Thibault"
+date: "September 17, 2017"
+output: github_document
 ---
 
 
