@@ -7,19 +7,76 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
+```{r}
+data <- read.csv("activity.csv")
+```
 
 ## What is mean total number of steps taken per day?
-
-
+```{r}
+StepsByDay <- aggregate(steps ~ date, data, sum)
+hist(StepsByDay$steps, main = paste("Total Number of Steps Each Day"), col="green", xlab="Number of Steps")
+StepsMean <- mean(StepsByDay$steps)
+StepsMedian <- median(StepsByDay$steps)
+```
+The mean is `r round(StepsMean)` and the median is `r StepsMedian`
 
 ## What is the average daily activity pattern?
-
-
+```{r}
+StepsperInterval <- aggregate(steps ~ interval, data, mean)
+plot(StepsperInterval$interval,StepsperInterval$steps, type="l", xlab="Interval", ylab="Number of Steps",main="Average Number of Steps per Day by Interval")
+MaxInterval <- StepsperInterval[which.max(StepsperInterval$steps),1]
+```
+The 5 minute interval that contains the average maximum number of steps is the `r MaxInterval`
 
 ## Imputing missing values
 
+There are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
+```{r}
+missing <- sum(!complete.cases(data))
+```
 
+There are `r missing` items missing in dataset
+
+We will replace the missing items by the average step of that day ith below formula
+```{r}
+fill.value <- function(steps, interval) {
+      filled <- NA
+      if (!is.na(steps))
+            filled <- c(steps)
+      else
+            filled <- (StepsperInterval[StepsperInterval$interval==interval, "steps"])
+      return(filled)
+}
+```
+And create the new dataset
+```{r}
+dataUpdated <- data
+dataUpdated$steps <- mapply(fill.value, dataUpdated$steps, dataUpdated$interval)
+
+```
+This is now the histogram with NA filled in
+```{r}
+StepsByDayUpdated <- aggregate(steps ~ date, dataUpdated, sum)
+hist(StepsByDayUpdated$steps, main = paste("Total Number of Steps Each Day"), col="green", xlab="Number of Steps")
+#calculate new results and impact
+StepsMeanUpdated <- mean(StepsByDayUpdated$steps)
+StepsMedianUpdated <- median(StepsByDayUpdated$steps)
+DiffStepsMean =(StepsMeanUpdated-StepsMean)
+DiffStepsMedian =(StepsMedianUpdated-StepsMedian)
+DiffTotal <- sum(StepsByDayUpdated$steps) - sum(StepsByDay$steps)
+```
+With the update, the mean is now `r round(StepsMeanUpdated)` and the median is `r StepsMedianUpdated`
+As we can see, the mean has not changed but the median has increased and got closer to the mean which makes the data more "normally distributed".
+By filling the NA we have added `r DiffTotal` steps to the data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+dataUpdated$daytype <- ifelse(weekdays(as.Date(dataUpdated$date)) == "Saturday" | weekdays(as.Date(dataUpdated$date)) == "Sunday", "weekend", "weekday")
+
+StepsperInterval <- aggregate(steps ~ interval + daytype, dataUpdated, mean)
+
+library(lattice)
+
+xyplot(StepsperInterval$steps ~ StepsperInterval$interval|StepsperInterval$daytype, main="Average Steps per Day by Interval",xlab="Interval", ylab="Steps",layout=c(1,2), type="l")
+```
